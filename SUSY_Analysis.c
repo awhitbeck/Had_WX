@@ -6,7 +6,6 @@
 #include "TTree.h"
 #include "TString.h"
 #include <vector>
-#define myclass_cxx
 #include "autumnclass.C"
 #include <TH2.h>
 #include <TStyle.h>
