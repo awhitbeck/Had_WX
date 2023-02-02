@@ -91,7 +91,7 @@ bool TrackVetos(){
 //H SR-->WHTag(0,0,1,999)
 //W SR-->WHTag(1,999,0,0)
 
-bool WHTag(int MinWTag,int MaxWTag, int MinHTag, int MaxHTag,int n){
+bool WHTag(int MinWTag,int MaxWTag, int MinHTag, int MaxHTag,int n = 0){
 
   if( n == 0 ){
   
@@ -156,7 +156,7 @@ if( HiggsCand ){
   else if( n == 1 ){return true;}
 };
 
-bool BVeto(int n){
+bool BVeto(int n = 0){
 
   if( n == 0 ){
 double PtThreshold=30.;
@@ -188,8 +188,13 @@ void SUSY_Analysis(){
  
    gStyle->SetOptStat(1111111);
 
-    TCanvas* tc = new TCanvas("aa","bb",800,600);
-    TH1F* h1 = new TH1F("h1","title",100,-1,3);
+    TCanvas* can = new TCanvas("can","can",500,500);
+    double WHbins[9] = {200,250,300,350,400,450,500,600,900};
+    double Wbins[10] = {200,250,300,350,400,450,500,600,800,1200};
+    double Hbins[10] = {200,250,300,350,400,450,500,600,800,1200};
+    TH1F WH_MET("WH_MET",";MET;Events",8,WHbins);
+    TH1F W_MET("W_MET",";MET;Events",9,Wbins);
+    TH1F H_MET("H_MET",";MET;Events",9,Hbins);
 
 
     
@@ -205,22 +210,44 @@ void SUSY_Analysis(){
     if(h.JetsAK8->size() == 0){
       continue;}
 
-    if( NVetos() && TrackVetos() && HTPTCut() && AK4JetsCut() && AK8JetsCut() && AK4DeltaPhiCut() && AK8DeltaPhiCut() && TwoAK8Jets() && WHTag(1,999,1,999,0) && BVeto(1) ){
-      h1->Fill(1,h.Weight*137000);}
+    if( NVetos() && TrackVetos() && HTPTCut() && AK4JetsCut() && AK8JetsCut() && AK4DeltaPhiCut() && AK8DeltaPhiCut() && TwoAK8Jets()){
+
+      //WH SR
+      if(WHTag(1,999,1,999)){ WH_MET.Fill(h.MET,h.Weight*59.546381*1000.); }
+      
+      //H SR
+      if(WHTag(0,0,1,999)){ H_MET.Fill(h.MET, h.Weight*59.546381*1000.);  }
+      
+      //W SR
+      if(WHTag(1,999,0,0)){ W_MET.Fill(h.MET, h.Weight*59.546381*1000.);  }
+      
        
       
-  }
+   }//end if statement--------------------
+    }//end for loop================================
 
+  WH_MET.SetBinContent(8,WH_MET.GetBinContent(8) + WH_MET.GetBinContent(9) );
+  H_MET.SetBinContent( 9,H_MET.GetBinContent(9 ) +  H_MET.GetBinContent(10));
+  W_MET.SetBinContent( 9,W_MET.GetBinContent(9 ) +  W_MET.GetBinContent(10));
 
-  h1->Draw();
+  WH_MET.SetLineColor(kViolet+5);
+  WH_MET.SetLineWidth(2);
+  H_MET.SetLineColor(kViolet+5);
+  H_MET.SetLineWidth(2);
+  W_MET.SetLineColor(kViolet+5);
+  W_MET.SetLineWidth(2);
 
-  h1->SetTitle("count");
-  h1->SetLineColor(kViolet+5);
-  h1->SetLineWidth(2);
+ 
+  WH_MET.Draw();
+  can->SaveAs("WH_MET.png");
+  
+  H_MET.Draw();
+  can->SaveAs("H_MET.png");
 
-  tc->SetGrid();
-  tc->SaveAs("count.png");
-  delete tc;
+  W_MET.Draw();
+  can->SaveAs("W_MET.png");
+  
+  delete can;
 }
 
 
