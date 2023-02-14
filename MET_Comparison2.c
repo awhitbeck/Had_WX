@@ -34,6 +34,35 @@ TLorentzVector MET4;
 vector<double> AK4DPhi = {1.5,0.5,0.3,0.3};
 vector<double> AK8DPhi = {1.5,0.5};
 
+void HistPlot(TH1F* h1, TH1F* h2, TString title,  TString label1, TString label2, TString OutFile, bool log=true){
+
+  TCanvas* can = new TCanvas("can","can",500,500);
+  can->SetGrid();
+  if(log){gPad->SetLogy();}
+  
+  h1->SetLineColor(kViolet+5);
+  h1->SetLineWidth(2);
+
+  h2->SetLineColor(kAzure+1);
+  h2->SetLineWidth(2);
+
+  h1->DrawNormalized("hist");
+  h2->DrawNormalized("SAME");
+  h1->GetXaxis()->SetTitle("MET");
+  h1->GetYaxis()->SetTitle("NEvents");
+  h1->SetTitle(title);
+  
+  auto legend = new TLegend(0.6,0.8,0.9,0.9);
+  legend->SetHeader("Files","C");
+  legend->SetTextSize(0.025);
+  legend->AddEntry(h1,label1,"l");
+  legend->AddEntry(h2,label2,"l");
+  legend->Draw();
+  
+  can->SaveAs(OutFile);
+
+  delete can;
+ }
 
 bool AK4JetsCut(int x){
   if(x==1){
@@ -301,7 +330,7 @@ if( HiggsCand ){
 
 void MET_Comparison2(){
 
-    TCanvas* can = new TCanvas("can","can",500,500);
+
     double WHbins[9] = {200,250,300,350,400,450,500,600,900};
     double Wbins[10] = {200,250,300,350,400,450,500,600,800,1200};
     double Hbins[10] = {200,250,300,350,400,450,500,600,800,1200};
@@ -390,70 +419,12 @@ void MET_Comparison2(){
   WH_METC->SetBinContent(8,WH_METC->GetBinContent(8) + WH_METC->GetBinContent(9) );
   H_METC->SetBinContent( 9,H_METC->GetBinContent(9 ) +  H_METC->GetBinContent(10));
   W_METC->SetBinContent( 9,W_METC->GetBinContent(9 ) +  W_METC->GetBinContent(10));
-  
-  WH_MET->SetLineColor(kViolet+5);
-  WH_MET->SetLineWidth(2);
-  
-  H_MET->SetLineColor(kAzure+1);
-  H_MET->SetLineWidth(2);
 
-  W_MET->SetLineColor(kTeal-7);
-  W_MET->SetLineWidth(2);
-
-  WH_METC->SetLineColor(kTeal-7);
-  WH_METC->SetLineWidth(2);
-  
-  H_METC->SetLineColor(kViolet+5);
-  H_METC->SetLineWidth(2);
-
-  W_METC->SetLineColor(kAzure+1);
-  W_METC->SetLineWidth(2);
-
-  can->SetGrid();
-  gPad->SetLogy();
-  
-  H_METC->Draw();
-  H_MET->GetXaxis()->SetTitle("MET");
-  H_MET->GetYaxis()->SetTitle("NEvents");
-  H_MET->SetTitle("H SR");
-  H_MET->Draw("SAME");
-  auto legend = new TLegend(0.6,0.8,0.9,0.9);
-  legend->SetHeader("Files","C");
-  legend->SetTextSize(0.025);
-  legend->AddEntry(H_MET,"Autumn18","l");
-  legend->AddEntry(H_METC,"CN925_WHBB","l");
-  legend->Draw();
-  can->SaveAs("H_Comparison.png");
-
-
-  W_METC->Draw();
-  W_MET->Draw("SAME");
-  W_MET->GetXaxis()->SetTitle("MET");
-  W_MET->GetYaxis()->SetTitle("NEvents");
-  W_MET->SetTitle("W SR");
-  auto legend2 = new TLegend(0.6,0.8,0.9,0.9);
-  legend2->SetHeader("Files","C");
-  legend2->SetTextSize(0.025);
-  legend2->AddEntry(W_MET,"Autumn18","l");
-  legend2->AddEntry(W_METC,"CN925_WHBB","l");
-  legend2->Draw();
-  can->SaveAs("W_Comparison.png");
-
-  WH_METC->Draw();
-  WH_MET->Draw("SAME");
-  WH_MET->GetXaxis()->SetTitle("MET");
-  WH_MET->GetYaxis()->SetTitle("NEvents");
-  WH_MET->SetTitle("WH SR");
-  auto legend3 = new TLegend(0.6,0.8,0.9,0.9);
-  legend3->SetHeader("Files","C");
-  legend3->SetTextSize(0.025);
-  legend3->AddEntry(WH_MET,"Autumn18","l");
-  legend3->AddEntry(WH_METC,"CN925_WHBB","l");
-  legend3->Draw();
-  can->SaveAs("WH_Comparison.png");
+  HistPlot(H_MET,H_METC,"H SR","Autumn18","CN925WHBB","H_Comparison3.png");
+  HistPlot(W_MET,W_METC,"W SR","Autumn18","CN925WHBB","W_Comparison3.png");
+  HistPlot(WH_MET,WH_METC,"WH SR","Autumn18","CN925WHBB","WH_Comparison3.png");
 
   
-  delete can;
 }
 
 
