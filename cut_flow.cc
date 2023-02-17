@@ -309,15 +309,24 @@ int main(int argc, char **argv){
   std::vector<double> btag_cuts = {0.4184,0.4941,0.6321};
   std::vector<double> wtag_cuts = {0.918,0.925,0.918};
 
-  // std::vector<char*> files = {f18};
-  // std::vector<double> lumis = {137.};
-  // std::vector<double> bbtag_cuts = {0.8365};
-  // std::vector<double> wtag_cuts = {};
+  //char f[] = "/Users/whitbeck/Downloads/CN925_WZ_sgino100_sget90_BB.root";
+  //char f[] = "/Users/whitbeck/Downloads/CN750_WZ_sgino100_sget90_BB.root";
+  //char f[] = "/Users/whitbeck/Downloads/CN600_WZ_sgino100_sget90_BB.root";
+  //char f[] = "/Users/whitbeck/Downloads/CN500_WZ_sgino100_sget90_BB.root";
+  //std::vector<char*> files = {f};
+  //std::vector<double> lumis = {2.12907*137./1000./38196.};  // this is cross section * integrated lumi / total # of events generated !! the extra 1000. is to correct a unit conversion below.
+  //std::vector<double> lumis = {6.69356*137./1000./21963.};  // this is cross section * integrated lumi / total # of events generated !! the extra 1000. is to correct a unit conversion below.
+  //std::vector<double> lumis = {20.1372*137./1000./44405.};  // this is cross section * integrated lumi / total # of events generated !! the extra 1000. is to correct a unit conversion below.
+  //std::vector<double> lumis = {46.3533*137./1000./22526.};  // this is cross section * integrated lumi / total # of events generated !! the extra 1000. is to correct a unit conversion below.
+  //std::vector<double> bbtag_cuts = {0.8365};
+  //std::vector<double> btag_cuts = {0.4184};
+  //std::vector<double> wtag_cuts = {0.918};
 
   for(int f = 0 ; f < files.size() ; f++){ // = = = = = = = = = = = =
 
     std::cout << "file: " << f << std::endl;
     
+    //TChain* chain = new TChain("TreeMaker2/PreSelection");
     TChain* chain = new TChain("tree");
     chain->Add(files[f]);
     RA2bNtuple* t = new RA2bNtuple(chain);
@@ -376,13 +385,18 @@ int main(int argc, char **argv){
   
   TCanvas* can = new TCanvas("can","can",500,500);
   cut_flow.Draw();
-  can->SaveAs("cut_flow.png");
+  //TString pre = "stealth_920_WZ_SBB_";
+  //TString pre = "stealth_750_WZ_SBB_";
+  //TString pre = "stealth_600_WZ_SBB_";
+  //TString pre = "stealth_500_WZ_SBB_";
+  TString pre = "TChiWH_";
+  can->SaveAs(pre+"cut_flow.png");
   WH_MET.Draw();
-  can->SaveAs("WH_MET.png");
+  can->SaveAs(pre+"WH_MET.png");
   H_MET.Draw();
-  can->SaveAs("H_MET.png");
+  can->SaveAs(pre+"H_MET.png");
   W_MET.Draw();
-  can->SaveAs("W_MET.png");
+  can->SaveAs(pre+"W_MET.png");
   
 }
 
