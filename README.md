@@ -23,11 +23,11 @@ Note, your executables must have code to be run inside a 'main' function whose r
 The input argumeents can be used to pass command line inputs to your program.  The first (`argc`) is the number of arguments
 passed and the second is an array of arguments pass has arrays of `char`.
 
-## Libraries objects
+## Libraries
 
 The code in this repo depends on some key classes.  The main class is the tree class that manages all of the
 branches in the RA2b ntuples: `RA2bNtuple`.  If you make changes to this class, you should remake the static library
-file that will be used by other classes and applications.  To builid this static library run the following command:
+file that will be used by other classes and applications.  To build this static library run the following command:
 
 `g++ $(root-config --glibs --cflags --libs) -c RA2bNtuple.cc`
 
