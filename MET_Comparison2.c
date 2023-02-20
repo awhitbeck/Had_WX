@@ -7,7 +7,7 @@
 #include "TString.h"
 #include <vector>
 #include "autumnclass.C"
-#include "WHBB.C"
+#include "WZBB.C"
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -25,10 +25,10 @@ TFile* tf1 = new TFile(File1,"r");
 TTree* tr1 = (TTree*) tf1->Get("tree");
 autumnclass c1(tr1);
 
-TString File2 ="/Users/jsewell/Documents/ROOT_documents/EW_SUSY/CN925_WH_sgino100_sget90_BB.root";
+TString File2 ="/Users/jsewell/Documents/ROOT_documents/EW_SUSY/CN925_WZ_sgino100_sget90_BB.root";
 TFile* tf2 = new TFile(File2,"r");
 TTree* tr2 = (TTree*) tf2->Get("TreeMaker2/PreSelection");
-WHBB c2(tr2);  
+WZBB c2(tr2);  
 
 TLorentzVector MET4;
 vector<double> AK4DPhi = {1.5,0.5,0.3,0.3};
@@ -46,8 +46,8 @@ void HistPlot(TH1F* h1, TH1F* h2, TString title,  TString label1, TString label2
   h2->SetLineColor(kAzure+1);
   h2->SetLineWidth(2);
 
-  h1->DrawNormalized("hist");
-  h2->DrawNormalized("SAME");
+  h1->Draw("hist");
+  h2->Draw("SAME hist");
   h1->GetXaxis()->SetTitle("MET");
   h1->GetYaxis()->SetTitle("NEvents");
   h1->SetTitle(title);
@@ -392,19 +392,19 @@ void MET_Comparison2(){
       //WH SR
       if(WHTag(1,999,1,999,2)){
 	//cout<<"Event: "<<evt<<" WH_MET2: "<<c2.MET<<endl;
-	WH_METC->Fill(c2.MET,c2.Weight);
+	WH_METC->Fill(c2.MET,137000*5.57407e-08);
       }
       
       //H SR
       if(WHTag(0,0,1,999,2)){
 	//cout<<"Event: "<<evt<<" H_MET2 Weight: "<<c2.Weight<<endl;
-	H_METC->Fill(c2.MET,c2.Weight);
+	H_METC->Fill(c2.MET,137000*5.57407e-08);
       }
       
       //W SR
       if(WHTag(1,999,0,0,2)){
 	//cout<<"Event: "<<evt<<" W_MET2: "<<c2.MET<<endl;
-	W_METC->Fill(c2.MET, c2.Weight);
+	W_METC->Fill(c2.MET,137000*5.57407e-08);
       }
       
        
@@ -420,9 +420,9 @@ void MET_Comparison2(){
   H_METC->SetBinContent( 9,H_METC->GetBinContent(9 ) +  H_METC->GetBinContent(10));
   W_METC->SetBinContent( 9,W_METC->GetBinContent(9 ) +  W_METC->GetBinContent(10));
 
-  HistPlot(H_MET,H_METC,"H SR","Autumn18","CN925WHBB","H_Comparison3.png");
-  HistPlot(W_MET,W_METC,"W SR","Autumn18","CN925WHBB","W_Comparison3.png");
-  HistPlot(WH_MET,WH_METC,"WH SR","Autumn18","CN925WHBB","WH_Comparison3.png");
+  HistPlot(H_MET,H_METC,"H SR","Autumn18","CN925WZBB","WZBB_H_Comparison.png");
+  HistPlot(W_MET,W_METC,"W SR","Autumn18","CN925WZBB","WZBB_W_Comparison.png");
+  HistPlot(WH_MET,WH_METC,"WH SR","Autumn18","CN925WZBB","WZBB_WH_Comparison.png");
 
   
 }
