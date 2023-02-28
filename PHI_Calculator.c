@@ -19,7 +19,7 @@
 
 using namespace std;
 
-TString File1  ="/Users/jsewell/Documents/ROOT_documents/EW_SUSY/CN925_WH_sgino100_sget90_BB.root";
+TString File1  ="/Users/jsewell/Documents/ROOT_documents/EW_SUSY/CN600_WH_sgino100_sget90_BB.root";
 TFile* tf1 = new TFile(File1,"r");
 TTree* tr1 = (TTree*) tf1->Get("TreeMaker2/PreSelection");
 WHBB c1(tr1);
@@ -367,9 +367,9 @@ double PhiSum(){
 
 void MET_Calculator(){
 
-  TH1F*  SPHI = new TH1F("SPHI",";MET;Events",12,-M_PI,M_PI);
-  TH1F*  FPHI = new TH1F("FPHI",";MET;Events",12,-M_PI,M_PI);
-  TH1F*  DPHI = new TH1F("DPHI","title",12,0,M_PI+1);
+  TH1F*  SPHI = new TH1F("SPHI",";MET;Events",48,-M_PI,M_PI);
+  TH1F*  FPHI = new TH1F("FPHI",";MET;Events",48,-M_PI,M_PI);
+  TH1F*  DPHI = new TH1F("DPHI","title",36,0,M_PI+1);
 
 
 //***********************************************
@@ -398,8 +398,8 @@ void MET_Calculator(){
      }//end if statement--------------------
     }//end for loop================================
 
-    HistPlot2(SPHI,FPHI,"Phi Comparison","Manual Sum","METPhi","PhiComparison.png");
-    HistPlot(DPHI,"Phi Difference","PhiDifference.png");
+    HistPlot2(SPHI,FPHI,"Phi Comparison 600","Manual Sum","METPhi","PhiComparison600.png");
+    HistPlot(DPHI,"Phi Difference 600","PhiDifference600.png");
     
 }
   
