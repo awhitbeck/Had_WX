@@ -50,3 +50,28 @@ If you make changes to this code, be sure to recompile it by running the followi
 You can run with:
 
 `./cut_flow`
+
+
+# For comparing miniAOD and nanoAOD trees:
+
+You will need to use the tree classes defined in `RA2bNtupleV20.h` and `NanoTree.h`.  Currently, these
+do not need to be compiled into a library file, all code that uses these compiles everything all at
+once.
+
+A simple piece of code that can compare branches directly with no manipulation is `compare_nano_ra2bv20.C`.
+This is a pretty fancy piece of code that relies on the `CompareVars` class defined in `CompareVars.cc`.
+This code uses a pair of trees, one of type `RA2bNtupleV20` and one of type `NanoTree`, a pair of branch names,
+one for each tree type, information for how to build a histogram (number of bins, start bin, and end bin),
+and if your extracting information from a vector or array, the index you would like to extract. So, if you
+wanted to compare the `BadChargedCandidateFilter` in each tree you would call the `CompareVar::CompareVar` with:
+`CompareVars test_comparison(ra2b_t,nano_t,"BadChargedCandidateFilter","Flag_BadChargedCandidateFilter",2,0.5,1.5);`
+If you would like to compare the leading pt electron eta:
+`CompareVars test_comparison(ra2b_t,nano_t,"Electrons_fCoordinates_fEta","Electron_eta",20,-5.,5.,0);`
+
+The script `compare_nano_ra2bv20.C` implements a number of comparison.  You can run this code with:
+`root -l -n compare_nano_ra2bv20.C`
+
+In case more detailed comparisons are necessary, e.g. if you have to first apply cuts, you can look at the code
+in `ak8jets.C`.  In this code you first get the list of jets that pass pt and eta requirements, then only compare
+jets that pass those requirements.  This is necessary for collections of objects that have different requirements
+in the trees.
