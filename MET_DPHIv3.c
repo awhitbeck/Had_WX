@@ -6,7 +6,7 @@
 #include "TTree.h"
 #include "TString.h"
 #include <vector>
-#include "autumnclass.C"
+#include "WHBB.C"
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -18,7 +18,7 @@
 using namespace std;
 
 //Root file initialization
-  unique_ptr<TFile> trf( TFile::Open("WHBB_DPHI.root", "RECREATE") );
+  unique_ptr<TFile> trf( TFile::Open("WZBB_ZDPHI.root", "RECREATE") );
 
 //Cut values & Weights
 TLorentzVector MET4;
@@ -107,7 +107,7 @@ void HistPlot4(TH1F* h1, TH1F* h2, TH1F* h3, TH1F* h4, TString title,  TString l
   delete can;
  }
 
-bool AK4JetsCut(autumnclass obj){
+bool AK4JetsCut(WHBB& obj){
 
   int c = 0;
   for(int i=0;i<obj.Jets->size();i++){
@@ -120,7 +120,7 @@ bool AK4JetsCut(autumnclass obj){
 }
   
       
-bool AK8JetsCut(autumnclass obj){
+bool AK8JetsCut(WHBB& obj){
 
   int c = 0;
     for(int i=0;i<obj.JetsAK8->size();i++){
@@ -132,7 +132,7 @@ bool AK8JetsCut(autumnclass obj){
   return (c>=1);
 }
 
-bool TwoAK8Jets(autumnclass obj){
+bool TwoAK8Jets(WHBB& obj){
 
   int c = 0;
     for(int i=0;i<obj.JetsAK8->size();i++){
@@ -144,13 +144,13 @@ bool TwoAK8Jets(autumnclass obj){
 
 }
   
-bool HTPTCut(autumnclass obj){
+bool HTPTCut(WHBB& obj){
 
   return (obj.HT>300 && obj.MET>200);
 
 }
 
-bool AK4DeltaPhiCut(autumnclass obj){
+bool AK4DeltaPhiCut(WHBB& obj){
 
   for(int i=0;i<obj.Jets->size();i++){
       if(i==AK4DPhi.size()){break;}
@@ -162,7 +162,7 @@ bool AK4DeltaPhiCut(autumnclass obj){
 
 }
 
-bool AK8DeltaPhiCut(autumnclass obj){
+bool AK8DeltaPhiCut(WHBB& obj){
 
     for(int i=0;i<obj.JetsAK8->size();i++){
       if(i==AK8DPhi.size()){break;}
@@ -173,13 +173,13 @@ bool AK8DeltaPhiCut(autumnclass obj){
   return (true);
 }
 
-bool NVetos(autumnclass obj){
+bool NVetos(WHBB& obj){
 
   return ( obj.NElectrons == 0 && obj.NMuons == 0 );
 
 }
 
-bool TrackVetos(autumnclass obj){
+bool TrackVetos(WHBB& obj){
 
   return ( obj.isoElectronTracks == 0 && obj.isoMuonTracks == 0 && obj.isoPionTracks == 0 );
   
@@ -189,7 +189,7 @@ bool TrackVetos(autumnclass obj){
 //H SR-->WHTag(0,0,1,999)
 //W SR-->WHTag(1,999,0,0)
 
-bool WHTag(int MinWTag,int MaxWTag, int MinHTag, int MaxHTag,autumnclass obj){
+bool WHTag(int MinWTag,int MaxWTag, int MinHTag, int MaxHTag,WHBB& obj){
   
 double AK8PtThreshold=200.;
 double AK8EtaThreshold=2.0;
@@ -250,7 +250,7 @@ if( HiggsCand ){
   }
 
 
-TLorentzVector METAdd(autumnclass obj,int pdgid){
+TLorentzVector METAdd(WHBB& obj,int pdgid){
   TLorentzVector sum = {0,0,0,0};
    
      for(int pdg = 0;pdg<obj.GenParticles_PdgId->size();pdg++){
@@ -271,16 +271,17 @@ void CutFlow(TString file_name, double weight, int pdgid, TH1F* hist, TH1F* hist
 
   TTree* tr = (TTree*) tf->Get("TreeMaker2/PreSelection");
 
-  autumnclass obj(tr);
+  WHBB obj(tr);
   
   Long64_t nentries = tr->GetEntriesFast();
+
     for(Long64_t jentry=0;jentry<nentries;jentry++){
     
     Long64_t ientry = obj.LoadTree(jentry);
     if (ientry < 0) break;
-    
+   
     obj.GetEntry(jentry);
-    
+   
     TLorentzVector MET4 = {0,0,0,0};
     MET4.SetPtEtaPhiE(obj.MET,0,obj.METPhi,0);
 
@@ -306,9 +307,9 @@ void CutFlow(TString file_name, double weight, int pdgid, TH1F* hist, TH1F* hist
      }//end if statement--------------------
    }//end for loop================================
 
-    trf->WriteObject(hist,"WH SR DPHI");
-    trf->WriteObject(hist2,"H SR DPHI");
-    trf->WriteObject(hist3,"W SR DPHI");
+    trf->WriteObject(hist,"WH SR ZDPHI");
+    trf->WriteObject(hist2,"H SR ZDPHI");
+    trf->WriteObject(hist3,"W SR ZDPHI");
 }
 
 
@@ -333,10 +334,10 @@ void MET_DPHIv3(){
     TH1F*  H_MET9 = new TH1F("H_MET9",";MET;Events",24,-M_PI,M_PI);
 
   //CutFlow(TString file_name, TTree* tree, double weight, int pdgid, TH1F* hist, TH1F* hist2, TH1F* hist3)
-    CutFlow("CN500_WH_sgino100_sget90_BB.root", WHBB5Weight, 23, WH_MET5, W_MET5, H_MET5);
-    CutFlow("CN600_WH_sgino100_sget90_BB.root", WHBB6Weight, 23, WH_MET6, W_MET6, H_MET6);
-    CutFlow("CN750_WH_sgino100_sget90_BB.root", WHBB7Weight, 23, WH_MET7, W_MET7, H_MET7);
-    CutFlow("CN925_WH_sgino100_sget90_BB.root", WHBB9Weight, 23, WH_MET9, W_MET9, H_MET9);
+    CutFlow("CN500_WZ_sgino100_sget90_BB.root", WZBB5Weight, 23, WH_MET5, W_MET5, H_MET5);
+    CutFlow("CN600_WZ_sgino100_sget90_BB.root", WZBB6Weight, 23, WH_MET6, W_MET6, H_MET6);
+    CutFlow("CN750_WZ_sgino100_sget90_BB.root", WZBB7Weight, 23, WH_MET7, W_MET7, H_MET7);
+    CutFlow("CN925_WZ_sgino100_sget90_BB.root", WZBB9Weight, 23, WH_MET9, W_MET9, H_MET9);
 
     trf->Close();
 
